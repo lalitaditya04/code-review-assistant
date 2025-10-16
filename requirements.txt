@@ -1,0 +1,29 @@
+# Code Review Assistant - Dependencies
+
+# Web Framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# Database
+sqlalchemy
+
+# AI/LLM (Universal - supports multiple providers)
+anthropic  
+openai 
+google-generativeai  
+httpx  
+
+# Code Analysis
+radon 
+
+# Templating
+jinja2
+
+# Environment Variables
+python-dotenv
+
+# Testing
+pytest
+pytest-asyncio
+httpx
