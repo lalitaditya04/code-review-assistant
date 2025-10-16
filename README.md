@@ -157,15 +157,4 @@ ollama serve  # Start Ollama manually
 pip install -r requirements.txt
 ```
 
-## Complete Documentation
-
-See [DOCUMENTATION.md](DOCUMENTATION.md) for:
-- Detailed architecture
-- System flow diagrams
-- API specifications
-- Development guide
-- Advanced configuration
-
-## Support
-
-For issues or questions, refer to the comprehensive [DOCUMENTATION.md](DOCUMENTATION.md) file.
+#Thank You
