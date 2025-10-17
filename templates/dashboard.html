@@ -190,6 +190,23 @@
             overflow-x: auto;
         }
         
+        .issue-item {
+            transition: all 0.2s;
+        }
+        
+        .issue-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        #showMoreBtn {
+            transition: all 0.3s;
+        }
+        
+        #showMoreBtn:hover {
+            transform: scale(1.05);
+        }
+        
         .api-status {
             position: fixed;
             top: 20px;
@@ -439,22 +456,54 @@
             html += `<h5>Summary</h5><p>${result.summary}</p>`;
 
             if (result.all_issues && result.all_issues.length > 0) {
-                html += '<h5 class="mt-4">Issues Found</h5>';
-                result.all_issues.slice(0, 10).forEach(issue => {
+                html += `<h5 class="mt-4">Issues Found (${result.all_issues.length})</h5>`;
+                html += '<div id="issuesList">';
+                
+                // Show first 5 issues initially
+                const initialCount = 5;
+                result.all_issues.slice(0, initialCount).forEach(issue => {
                     const severityClass = `issue-${issue.severity}`;
                     html += `
-                        <div class="alert alert-light">
+                        <div class="alert alert-light issue-item">
                             <strong>Line ${issue.line}:</strong> 
                             <span class="issue-badge ${severityClass}">${issue.severity.toUpperCase()}</span>
                             ${issue.type}<br>
                             <small>${issue.message}</small>
+                            ${issue.recommendation ? `<br><small class="text-primary"><strong>Recommendation:</strong> ${issue.recommendation}</small>` : ''}
                             ${issue.code_snippet ? `<div class="code-snippet mt-2">${issue.code_snippet}</div>` : ''}
                         </div>
                     `;
                 });
-                if (result.all_issues.length > 10) {
-                    html += `<p class="text-muted">... and ${result.all_issues.length - 10} more issues</p>`;
+                
+                // Hidden issues (will be shown when "Show More" is clicked)
+                if (result.all_issues.length > initialCount) {
+                    html += '<div id="hiddenIssues" style="display: none;">';
+                    result.all_issues.slice(initialCount).forEach(issue => {
+                        const severityClass = `issue-${issue.severity}`;
+                        html += `
+                            <div class="alert alert-light issue-item">
+                                <strong>Line ${issue.line}:</strong> 
+                                <span class="issue-badge ${severityClass}">${issue.severity.toUpperCase()}</span>
+                                ${issue.type}<br>
+                                <small>${issue.message}</small>
+                                ${issue.recommendation ? `<br><small class="text-primary"><strong>Recommendation:</strong> ${issue.recommendation}</small>` : ''}
+                                ${issue.code_snippet ? `<div class="code-snippet mt-2">${issue.code_snippet}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    
+                    // Show More button
+                    html += `
+                        <div class="text-center my-3">
+                            <button class="btn btn-outline-primary" id="showMoreBtn" onclick="toggleIssues()">
+                                <i class="fas fa-chevron-down"></i> Show ${result.all_issues.length - initialCount} More Issues
+                            </button>
+                        </div>
+                    `;
                 }
+                
+                html += '</div>';
             }
 
             reviewResult.innerHTML = html;
@@ -579,6 +628,21 @@
                alert('Error: '+error.message);
             }
          }
+
+        // Toggle show/hide issues
+        function toggleIssues() {
+            const hiddenIssues = document.getElementById('hiddenIssues');
+            const showMoreBtn = document.getElementById('showMoreBtn');
+            
+            if (hiddenIssues.style.display === 'none') {
+                hiddenIssues.style.display = 'block';
+                showMoreBtn.innerHTML = '<i class="fas fa-chevron-up"></i> Show Less';
+            } else {
+                hiddenIssues.style.display = 'none';
+                const issueCount = hiddenIssues.querySelectorAll('.issue-item').length;
+                showMoreBtn.innerHTML = `<i class="fas fa-chevron-down"></i> Show ${issueCount} More Issues`;
+            }
+        }
 
         // Load initial data
         loadReviews();
