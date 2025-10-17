@@ -478,12 +478,17 @@
                                         <small class="text-muted">${review.language} • ${new Date(review.created_at).toLocaleString()}</small>
                                     </div>
                                     <div class="col-md-3">
-                                        <span class="issue-badge issue-critical">${review.critical_issues} Critical</span>
-                                        <span class="issue-badge issue-medium">${review.medium_issues} Medium</span>
-                                        <span class="issue-badge issue-low">${review.low_issues} Low</span>
+                                          <span class="issue-badge issue-critical">${review.critical_issues} Critical</span>
+                                          <span class="issue-badge issue-medium">${review.medium_issues} Medium</span>
+                                          <span class="issue-badge issue-low">${review.low_issues} Low</span>
                                     </div>
-                                    <div class="col-md-3 text-end">
-                                        <span class="badge bg-${scoreClass} fs-5">${review.score}/100</span>
+                                    <div class="col-md-2 text-end">
+                                       <span class="badge bg-${scoreClass} fs-5">${review.score}/100</span>
+                                    </div>
+                                    <div class="col-md-1 text-end">
+                                       <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteReview('${review.id}')">
+                                          <i class="fas fa-trash"></i>
+                                       </button>
                                     </div>
                                 </div>
                             </div>
@@ -552,6 +557,28 @@
                 alert('Error loading review: ' + error.message);
             }
         }
+
+        // Delete review
+        async function deleteReview(reviewId){
+         if(!confirm('Are you sure you want to delete this review?')){
+            return;
+         }
+         try{
+            const response = await fetch(`api/review/${reviewId}`,{
+               method: 'DELETE'
+            });
+            if(response.ok){
+               alert('Review deleted successfully');
+               loadReviews();
+               loadStats();
+            }else{
+               const data = await response.json();
+               alert('Error: '+(data.detail || 'Failed to delete review'));
+            }
+         }catch(error){
+            alert('Error: '+error.message);
+         }
+      }
 
         // Load initial data
         loadReviews();

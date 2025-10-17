@@ -44,7 +44,7 @@ async def startup_event():
     Initialize application on startup.
     """
     print(f"\n{'='*60}")
-    print(f"🚀 Starting {settings.APP_NAME}")
+    print(f"Starting {settings.APP_NAME}")
     print(f"{'='*60}")
     
     # Initialize directories
