@@ -310,12 +310,6 @@ Contributions are welcome! Please read the documentation before submitting PRs.
 
 ---
 
-## License
-
-MIT License - See LICENSE file for details
-
----
-
 ## Acknowledgments
 
 Built with:
