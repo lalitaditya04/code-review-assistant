@@ -9,7 +9,7 @@ from pathlib import Path
 
 from app.config import settings
 from app.database import init_db
-from app.routers import review
+from app.routers import review, evaluation
 
 # Initialize application
 app = FastAPI(
@@ -36,6 +36,7 @@ templates = Jinja2Templates(directory=str(templates_dir))
 
 # Include routers
 app.include_router(review.router)
+app.include_router(evaluation.router)
 
 
 @app.on_event("startup")
@@ -98,7 +99,10 @@ async def api_root():
             "list_reviews": "GET /api/reviews",
             "delete_review": "DELETE /api/review/{id}",
             "statistics": "GET /api/stats",
-            "health": "GET /api/health"
+            "health": "GET /api/health",
+            "evaluation_benchmark": "GET /api/evaluation/benchmark",
+            "evaluation_report": "GET /api/evaluation/benchmark/report",
+            "evaluation_metrics": "GET /api/evaluation/metrics"
         }
     }
 
